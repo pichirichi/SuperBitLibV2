@@ -15,6 +15,13 @@ async function main() {
         const english = read(`_locales/${file}`);
         const hebrew = read(`_locales/he/${file}`);
         for (const [key, original] of Object.entries(english)) {
+            if (/^\{id:category\}/.test(key)) {
+                const category = key.slice('{id:category}'.length);
+                const namespace = category === 'Neopixel' ? 'neopixel' : category;
+                assert.ok(hebrew[namespace + '|block'], `Missing category translation: ${key}`);
+                count++;
+                continue;
+            }
             assert.ok(hebrew[key], `Missing Hebrew: ${key}`);
             assert.deepEqual(tokens(hebrew[key]), tokens(original), `Placeholder mismatch: ${key}`);
             if (key.endsWith('|block')) {

@@ -4,7 +4,7 @@
   "scripts": {
     "pxt:setup": "node -e \"require('fs').writeFileSync('node_modules/pxtcli.json', JSON.stringify({targetdir:'pxt-microbit'}))\"",
     "build:sim": "pxt build --debug",
-    "test": "pxt gendocs --locs && node tests/localization.js && node tests/interfaces.js && node tests/servos.js && node tests/neopixel-localization.js",
+    "test": "pxt gendocs --locs && node tests/localization.js && node tests/interfaces.js && node tests/servos.js && node tests/neopixel-localization.js && node tests/category-switch.js",
     "test:render": "node tests/render.js"
   },
   "devDependencies": {
