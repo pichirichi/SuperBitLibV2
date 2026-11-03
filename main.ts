@@ -285,10 +285,9 @@ namespace SuperBitV2 {
         }
     }
     // Calibration belongs to a port and is reset when the micro:bit restarts.
-    // Conservative positional defaults: calibrate the physical endpoints before
-    // treating the logical 0..180 range as a measured 180-degree sweep.
-    let servo180MinUs = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
-    let servo180MaxUs = [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000];
+    // Defaults match the tested kit servo; other servos may need calibration.
+    let servo180MinUs = [600, 600, 600, 600, 600, 600, 600, 600];
+    let servo180MaxUs = [3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000];
     // Match Servo4's nominal pulses, without changing the legacy API.
     let servo360ForwardUs = [800, 800, 800, 800, 800, 800, 800, 800];
     let servo360NeutralUs = [1700, 1700, 1700, 1700, 1700, 1700, 1700, 1700];
@@ -328,7 +327,7 @@ namespace SuperBitV2 {
     }
 
     /**
-     * Set a positional Servo to an angle from 0 to 180 degrees. Calibrate its safe physical endpoints first.
+     * Set a positional Servo to an angle from 0 to 180 degrees. Defaults match the tested kit servo; calibrate other servos as needed.
      * @param port servo port, eg: SuperBitV2.enServo.S1
      * @param angle angle in degrees; out-of-range values are clamped, eg: 90
      */
@@ -344,12 +343,12 @@ namespace SuperBitV2 {
     /**
      * Configure safe positional pulse endpoints for one port. Does not move the servo. Invalid calibration is ignored. Calibration resets on restart.
      * @param port servo port
-     * @param minUs pulse for 0 degrees in microseconds (500 to 3100), eg: 1000
-     * @param maxUs pulse for 180 degrees; must exceed minUs (500 to 3100), eg: 2000
+     * @param minUs pulse for 0 degrees in microseconds (500 to 3100), eg: 600
+     * @param maxUs pulse for 180 degrees; must exceed minUs (500 to 3100), eg: 3000
      */
     //% blockId=SuperBitV2_CalibrateServo180 block="calibrate Servo 180°|Port %port|0° pulse (µs) %minUs|180° pulse (µs) %maxUs"
     //% advanced=true weight=80
-    //% minUs.min=500 minUs.max=3100 minUs.defl=1000 maxUs.min=500 maxUs.max=3100 maxUs.defl=2000
+    //% minUs.min=500 minUs.max=3100 minUs.defl=600 maxUs.min=500 maxUs.max=3100 maxUs.defl=3000
     export function CalibrateServo180(port: enServo, minUs: number, maxUs: number): void {
         if (!validServoPort(port) || !validServoPulse(minUs) ||
             !validServoPulse(maxUs) || minUs >= maxUs) return;

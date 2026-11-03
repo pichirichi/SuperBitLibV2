@@ -14,7 +14,7 @@ and saved block identifiers are preserved.
 
 The plain repository URL selects the latest published version. To pin this
 release in a project, set its `pxt.json` dependency to
-`github:pichirichi/SuperBitLibV2#v1.0.2`.
+`github:pichirichi/SuperBitLibV2#v1.0.3`.
 
 The fork uses `master` as its default branch. MakeCode pins the installed
 extension to a specific commit or release; existing projects do not automatically
@@ -39,7 +39,9 @@ See [NeoPixel localization and validation](docs/neopixel-localization.md).
 
 Use **Servo 180° | Port S1 | Angle 90°** for a positional servo, and the
 direction/speed and Stop blocks for continuous-rotation servos. All eight ports
-are supported. Calibrate safe endpoints and neutral for your actual motors.
+are supported. Servo180 defaults to 600–3000 µs based on the tested kit servo,
+not a universal SG90 specification; calibrate endpoints for other motors.
+Calibrate continuous-rotation neutral for your actual motor.
 See [mapping and calibration](docs/servos.md), [TypeScript example](examples/servos.ts),
 and [Python example](examples/servos.py). Existing Servo APIs retain their behavior.
 

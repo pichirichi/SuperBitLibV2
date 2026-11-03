@@ -1,6 +1,6 @@
 # Servo validation — 2026-11-03
 
-All automated checks run locally. No physical SuperBit or servo is connected.
+Automated checks run locally without a connected SuperBit or servo. The user observed approximately 0°, 90°, and 180° on the tested kit servo with legacy Servo2 values 0, 180, and 360; those observations motivate the 600–3000 µs defaults. These are not universal SG90 specifications or scope measurements.
 Tools: PXT CLI 0.5.1, micro:bit target 9.1.2, pxt-core 13.2.17.
 
 ## Automated checks
@@ -47,4 +47,4 @@ requested local work only. No source is submitted by the test scripts.
 
 The full hosted-editor installation/language-switch smoke test is documented in
 `localization.md`; it remains separate from the passing local PXT renderer and
-compiler checks. Changes on the local servo branch are not published to GitHub.
+compiler checks. Current local changes require publication before normal installation includes them.

@@ -30,8 +30,8 @@ function board(source) {
 const source = fs.readFileSync('main.ts', 'utf8');
 const b = board(source), s = b.api;
 for (let port = 0; port < 8; port++) {
-    for (const [angle, ticks] of [[0,205],[90,307],[180,410],[-100,205],[999,410],
-        [NaN,307],[-Infinity,205],[Infinity,410],[45.5,257]]) {
+    for (const [angle, ticks] of [[0,123],[90,369],[180,615],[-100,123],[999,615],
+        [NaN,369],[-Infinity,123],[Infinity,615],[45.5,247]]) {
         b.pulse(() => s.Servo180(port, angle), port, ticks);
     }
     for (const direction of [s.ServoDirection.Forward, s.ServoDirection.Reverse]) {
@@ -45,13 +45,22 @@ for (let port = 0; port < 8; port++) {
     b.pulse(() => s.Servo360Stop(port), port,348);
     b.pulse(() => s.Servo360(port,99,100), port,348);
 }
+// The measured Servo2 positions correspond to the new defaults. The legacy
+// writer truncates ticks while the new writer rounds, so allow one tick.
+for (const angle of [0, 90, 180]) {
+    b.writes.length = 0; s.Servo180(0, angle);
+    const modern = b.writes.find(w => w.bytes.length === 5).bytes;
+    b.writes.length = 0; s.Servo2(0, angle * 2);
+    const old = b.writes.find(w => w.bytes.length === 5).bytes;
+    assert.ok(Math.abs((modern[3] + 256 * modern[4]) - (old[3] + 256 * old[4])) <= 1);
+}
 // Check every physical-angle request and fractional speed for quantization,
 // monotonicity, and staying inside the configured endpoints.
 for (let angle = 0; angle <= 180; angle++) {
     b.writes.length = 0; s.Servo180(0,angle);
     const bytes = b.writes[0].bytes;
     const us = (bytes[3]+256*bytes[4])*4.88;
-    assert.ok(Math.abs(us-(1000+angle*1000/180)) <= 2.44+1e-8);
+    assert.ok(Math.abs(us-(600+angle*2400/180)) <= 2.44+1e-8);
 }
 for (let speed = 0; speed <= 100; speed += 0.5) {
     b.writes.length = 0; s.Servo360(0,s.ServoDirection.Forward,speed);
@@ -70,7 +79,7 @@ for (const port of [-1,8,0.5,NaN,Infinity,-Infinity]) {
 b.silent(() => s.CalibrateServo180(7,600,3040));
 b.pulse(() => s.Servo180(7,180),7,623);
 b.pulse(() => s.Servo180(7,90),7,373);
-b.pulse(() => s.Servo180(0,180),0,410);
+b.pulse(() => s.Servo180(0,180),0,615);
 b.pulse(() => s.Servo360Stop(7),7,348);
 for (const [min,max] of [[499,2000],[1000,3101],[2000,1000],[1500,1500],
     [NaN,2000],[1000,NaN],[-Infinity,2000],[1000,Infinity]]) {
@@ -95,7 +104,7 @@ for (let port = 0; port < 8; port++) {
     const boardState = board(source), api = boardState.api;
     boardState.silent(() => api.CalibrateServo180(port,600,3040));
     boardState.pulse(() => api.Servo180(port,180),port,623);
-    boardState.pulse(() => api.Servo180((port+1)%8,180),(port+1)%8,410);
+    boardState.pulse(() => api.Servo180((port+1)%8,180),(port+1)%8,615);
     boardState.pulse(() => api.CalibrateServo360(port,800,1750,2600),port,359);
     boardState.pulse(() => api.Servo360Stop((port+1)%8),(port+1)%8,348);
 }
