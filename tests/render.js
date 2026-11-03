@@ -31,7 +31,7 @@ const { load } = require('./pxt-host');
   const blocks=pxt.blocks.requirePxtBlockly();
   blocks.initializeAndInject(info);
   const ws=Blockly.inject(document.getElementById('blocks'),{rtl:true,readOnly:false,renderer:'pxt',sounds:false,media:''});
-  const ids=info.blocks.filter(x=>x.namespace.startsWith('SuperBitV2')).map(x=>x.attributes.blockId);
+  const ids=info.blocks.filter(x=>x.namespace.startsWith('SuperBitV2') || x.namespace.startsWith('neopixel')).map(x=>x.attributes.blockId);
   let y=30; const rendered=[];
   for(const id of ids) {
     const block=ws.newBlock(id); block.initSvg();block.render();block.moveBy(-30,y);
@@ -42,7 +42,7 @@ const { load } = require('./pxt-host');
  },{info,target});
  require('node:assert/strict').equal(data.language,'he');
  require('node:assert/strict').equal(data.rtl,true);
- require('node:assert/strict').ok(data.rendered.length>=24);
+ require('node:assert/strict').ok(data.rendered.length>=49);
  fs.mkdirSync('built/validation',{recursive:true});
  fs.writeFileSync('built/validation/hebrew-blocks.json',JSON.stringify(data,null,2));
  await page.setViewport({width:1500,height:Math.min(data.height+50,6000)});
