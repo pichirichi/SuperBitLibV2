@@ -7,6 +7,7 @@ load dependency
 
 /** Control the SuperBit board motors, servos, lights, and music. */
 //% color="#ECA40D" weight=30 icon="\uf135"
+//% block="SuperBitV2"
 namespace SuperBitV2 {
 
     const PCA9685_ADD = 0x40
@@ -575,6 +576,7 @@ namespace SuperBitV2 {
 
 /** Read digital sensors connected to the SuperBit board. */
 //% color="#228B22" weight=25 icon="\uf0b2"
+//% block="SuperBitV2_Digital"
 namespace SuperBitV2_Digital {
 	
     export enum mwDigitalNum {
@@ -861,6 +863,7 @@ namespace SuperBitV2_Digital {
 
 /** Read analog sensors connected to the SuperBit board. */
 //% color="#C814B8" weight=24 icon="\uf080"
+//% block="SuperBitV2_Analog"
 namespace SuperBitV2_Analog {
 
     export enum enRocker {
@@ -992,6 +995,7 @@ namespace SuperBitV2_Analog {
 
 /** Control lights, vibration motors, and the buzzer using PWM pins. */
 //% color="#ECA40D" weight=22 icon="\uf085"
+//% block="SuperBitV2_PWM"
 namespace SuperBitV2_PWM {
 
     export enum enColor {

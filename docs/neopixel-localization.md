@@ -9,12 +9,13 @@ TypeScript/Python API, enum value, block ID, or LED calculation is changed.
 
 PXT combines localization keys from the consuming project's dependencies.
 Fully qualified keys such as `neopixel.Strip.showColor|block`,
-`NeoPixelColors.Red|block`, and `{id:category}Neopixel` can therefore be supplied
+`NeoPixelColors.Red|block`, and `neopixel|block` can therefore be supplied
 by SuperBitV2. This avoids maintaining a fork of the dependency just for text.
 This locale applies when SuperBitV2 is installed; it does not translate an
 independent NeoPixel installation in a project without SuperBitV2.
 
-The 88 extracted keys cover the category, all 20 standard/advanced blocks,
+The 88 extracted localization entries, including a category alias backed by
+`neopixel|block`, cover all 20 standard/advanced blocks,
 10 color options, three RGB modes, tooltips, and parameter help. Latin technical
 terms use the same LRI/PDI text isolation as the existing SuperBitV2 Hebrew.
 Parameter placeholders, shadow IDs such as `neopixel_colors`, and block segment

@@ -161,10 +161,5 @@
   "neopixel.create|block": "⁦NeoPixel⁩ בפין %pin|עם %numleds|נורות במצב %mode",
   "neopixel.hsl|block": "גוון %h|רוויה %s|בהירות %l",
   "neopixel.rgb|block": "אדום %red|ירוק %green|כחול %blue",
-  "neopixel|block": "נורות ⁦NeoPixel⁩",
-  "{id:category}Neopixel": "נורות ⁦NeoPixel⁩",
-  "{id:category}SuperBitV2": "⁦SuperBitV2⁩",
-  "{id:category}SuperBitV2_Analog": "⁦SuperBitV2⁩ חיישנים אנלוגיים",
-  "{id:category}SuperBitV2_Digital": "⁦SuperBitV2⁩ חיישנים דיגיטליים",
-  "{id:category}SuperBitV2_PWM": "⁦SuperBitV2⁩ בקרת ⁦PWM⁩"
+  "neopixel|block": "נורות ⁦NeoPixel⁩"
 }

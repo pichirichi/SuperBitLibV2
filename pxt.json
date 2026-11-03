@@ -1,6 +1,6 @@
 {
     "name": "SuperBitV2",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Extension for YahBoom SuperBitV2",
     "license": "MIT",
     "dependencies": {
@@ -11,6 +11,7 @@
     "files": [
         "README.md",
         "main.ts",
+        "neopixel-localization.ts",
         "_locales/zh-cn/SuperBitV2-strings.json",
         "_locales/zh-tw/SuperBitV2-strings.json",
         "_locales/he/SuperBitV2-strings.json",

@@ -72,6 +72,13 @@ async function main() {
         const english = JSON.parse(extracted[`neopixel${suffix}-strings.json`]);
         const hebrew = read(`_locales/he/SuperBitV2${suffix}-strings.json`);
         for (const [key, value] of Object.entries(english)) {
+            if (/^\{id:category\}/.test(key)) {
+                const category = key.slice('{id:category}'.length);
+                const namespace = category === 'Neopixel' ? 'neopixel' : category;
+                assert.ok(hebrew[namespace + '|block'], `Missing category translation: ${key}`);
+                count++;
+                continue;
+            }
             assert.ok(hebrew[key], `Missing NeoPixel translation: ${key}`);
             assert.deepEqual(tokens(hebrew[key]), tokens(value), `Parameter tokens: ${key}`);
             assert.deepEqual(shadows(hebrew[key]), shadows(value), `Shadow IDs: ${key}`);
