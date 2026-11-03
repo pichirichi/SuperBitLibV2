@@ -47,3 +47,10 @@ and verifies a TypeScript → Python → TypeScript round trip with the actual P
 converters. `npm run test:render` runs an optional headless-browser render with
 PXT configured to Hebrew and the workspace set to RTL. It blocks all browser
 network requests and writes screenshots under `built/validation/` for review.
+
+## NeoPixel dependency
+
+SuperBitV2 also supplies Hebrew keys for its unchanged NeoPixel dependency.
+See [NeoPixel coverage and validation](neopixel-localization.md).
+`tests/neopixel-localization.js` extracts that dependency’s current keys and
+checks that a consuming project receives the translations through SuperBitV2.

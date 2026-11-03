@@ -12,10 +12,15 @@ and saved block identifiers are preserved.
    in the same project: the namespaces and block identifiers would overlap.
 4. Select **Settings → Language → עברית** for Hebrew. The editor reloads.
 
-The new servo APIs in this local checkout have not been published. The fork URL
-installs what is currently published, so it will not include local-only changes.
-Validate this checkout with the local commands below. A maintainer can publish
-and tag a release later, then projects can update the extension.
+The fork uses `master` as its default branch. MakeCode pins the installed
+extension to a specific commit or release; existing projects do not automatically
+follow branch changes. New features must be published through `develop` and
+`master` before normal installation includes them. Reload the editor after an
+extension update to refresh its blocks and translations.
+
+The separate **NeoPixel** category is supplied by a dependency. SuperBitV2 also
+provides its Hebrew block labels, color/RGB-mode dropdowns, and help text.
+See [NeoPixel localization and validation](docs/neopixel-localization.md).
 
 ## עברית
 
