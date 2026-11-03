@@ -52,4 +52,4 @@ that existing API. All its block text and help are still checked.
 No physical LED/hardware test or native firmware build was performed for this
 text-only change. A hosted MakeCode test requires publishing the feature through
 the fork's normal Git Flow process, updating the project's pinned extension,
-and reloading the editor. This feature is initially kept local for review.
+and reloading the editor. The change is included in release v1.0.1.

@@ -12,6 +12,10 @@ and saved block identifiers are preserved.
    in the same project: the namespaces and block identifiers would overlap.
 4. Select **Settings → Language → עברית** for Hebrew. The editor reloads.
 
+To install this exact release, use
+`https://github.com/pichirichi/SuperBitLibV2#v1.0.1`.
+The plain repository URL selects the latest published version.
+
 The fork uses `master` as its default branch. MakeCode pins the installed
 extension to a specific commit or release; existing projects do not automatically
 follow branch changes. New features must be published through `develop` and
