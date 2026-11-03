@@ -1,6 +1,6 @@
 {
     "name": "SuperBitV2",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Extension for YahBoom SuperBitV2",
     "license": "MIT",
     "dependencies": {
