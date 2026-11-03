@@ -5,6 +5,7 @@ load dependency
 "SuperBitV2": "file:../pxt-SuperBitV2"
 */
 
+/** Control the SuperBit board motors, servos, lights, and music. */
 //% color="#ECA40D" weight=30 icon="\uf135"
 namespace SuperBitV2 {
 
@@ -45,33 +46,55 @@ namespace SuperBitV2 {
    
     export enum enMusic {
 
+        //% block="dadadum"
         dadadum = 0,
+        //% block="entertainer"
         entertainer,
+        //% block="prelude"
         prelude,
+        //% block="ode"
         ode,
+        //% block="nyan"
         nyan,
+        //% block="ringtone"
         ringtone,
+        //% block="funk"
         funk,
+        //% block="blues"
         blues,
 
+        //% block="birthday"
         birthday,
+        //% block="wedding"
         wedding,
+        //% block="funereal"
         funereal,
+        //% block="punchline"
         punchline,
+        //% block="baddy"
         baddy,
+        //% block="chase"
         chase,
+        //% block="ba_ding"
         ba_ding,
+        //% block="wawawawaa"
         wawawawaa,
+        //% block="jump_up"
         jump_up,
+        //% block="jump_down"
         jump_down,
+        //% block="power_up"
         power_up,
+        //% block="power_down"
         power_down
     }
     
 
     
     export enum enSteppers {
+        //% block="B1"
         B1 = 0x1,
+        //% block="B2"
         B2 = 0x2
     }
     export enum enPos { 
@@ -102,19 +125,31 @@ namespace SuperBitV2 {
     
     export enum enServo {
         
+        //% block="S1"
         S1 = 0,
+        //% block="S2"
         S2,
+        //% block="S3"
         S3,
+        //% block="S4"
         S4,
+        //% block="S5"
         S5,
+        //% block="S6"
         S6,
+        //% block="S7"
         S7,
+        //% block="S8"
         S8
     }
     export enum enMotors {
+        //% block="M1"
         M1 = 8,
+        //% block="M2"
         M2 = 10,
+        //% block="M3"
         M3 = 12,
+        //% block="M4"
         M4 = 14
     }
 
@@ -206,11 +241,8 @@ namespace SuperBitV2 {
         setPwm(index, 0, 0);
         setPwm(index + 1, 0, 0);
     }
-    /**
-     * *****************************************************************
-     * @param index
-     */   
-    //% blockId=SuperBitV2_RGB_Program block="RGB_Program"
+    /** Get the four programmable RGB lights on pin P12. */
+//% blockId=SuperBitV2_RGB_Program block="RGB_Program"
     //% weight=99
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
@@ -221,6 +253,7 @@ namespace SuperBitV2 {
         }
         return yahStrip;  
     } 
+    /** Play the selected built-in melody once. */
     
     //% blockId=SuperBitV2_Music block="Music|%index"
     //% weight=98
@@ -250,6 +283,7 @@ namespace SuperBitV2 {
             case enMusic.power_down: music.beginMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.Once); break;
         }
     }
+    /** Set a servo using the legacy 180-degree pulse mapping. Actual travel depends on the servo. */
     
     //% blockId=SuperBitV2_Servo block="Servo(180°)|num %num|value %value"
     //% weight=97
@@ -264,6 +298,7 @@ namespace SuperBitV2 {
         setPwm(num, 0, pwm);
 
     }
+    /** Set a servo using the legacy 270-degree pulse mapping. Actual travel depends on the servo. */
 
     //% blockId=SuperBitV2_Servo2 block="Servo(270°)|num %num|value %value"
     //% weight=96
@@ -279,6 +314,7 @@ namespace SuperBitV2 {
         setPwm(num, 0, pwm);
 
     }
+    /** Run a continuous-rotation servo using the original direction and speed mapping. Stop may need calibration. */
 
     //% blockId=SuperBitV2_Servo3 block="Servo(360°)|num %num|pos %pos|value %value"
     //% weight=96
@@ -308,6 +344,7 @@ namespace SuperBitV2 {
        
 
     }
+    /** Run a continuous-rotation servo using the alternate stop pulse. Actual stopping depends on the servo. */
 
     //% blockId=SuperBitV2_Servo4 block="Servo(360°_rotatable)|num %num|pos %pos|value %value"
     //% weight=96
@@ -337,6 +374,7 @@ namespace SuperBitV2 {
        
 
     }
+    /** Run a DC motor at a speed from -255 to 255. Zero stops the motor; the sign selects direction. */
     
    
     //% blockId=SuperBitV2_MotorRun block="Motor|%index|speed(-255~255) %speed"
@@ -379,6 +417,7 @@ namespace SuperBitV2 {
         }
         
     }
+    /** Run two DC motors with independent speeds from -255 to 255. */
 
     //% blockId=SuperBitV2_MotorRunDual block="Motor|%motor1|speed %speed1|%motor2|speed %speed2"
     //% weight=92
@@ -390,6 +429,7 @@ namespace SuperBitV2 {
         MotorRun(motor1, speed1);
         MotorRun(motor2, speed2);
     }
+    /** Stop all four DC motors. */
 
     //% blockId=SuperBitV2_MotorStopAll block="Motor Stop All"
     //% weight=91
@@ -408,6 +448,7 @@ namespace SuperBitV2 {
 
 }
 
+/** Read digital sensors connected to the SuperBit board. */
 //% color="#228B22" weight=25 icon="\uf0b2"
 namespace SuperBitV2_Digital {
 	
@@ -471,6 +512,7 @@ namespace SuperBitV2_Digital {
         //% blockId="Realse" block="Realse"
         Realse = 1
     }	
+    /** Read temperature or humidity from a DHT11 sensor. */
 
 	//% blockId="readdht11" block="value of dht11 %dht11type| at pin %value_DNum"
     //% weight=100
@@ -565,6 +607,7 @@ namespace SuperBitV2_Digital {
 				return 0;
 		}
     }
+    /** Read the distance in centimetres from an ultrasonic sensor. */
 
 
     //% blockId=SuperBitV2_Digital_Ultrasonic block="Ultrasonic|pin %value_DNum"
@@ -594,6 +637,7 @@ namespace SuperBitV2_Digital {
 
         return Math.idiv(d, 58);
     }
+    /** Check whether the infrared sensor detects the selected obstacle state. */
 
     //% blockId=SuperBitV2_Digital_IR block="IR|pin %value_DNum|value %value"
     //% weight=96
@@ -611,6 +655,7 @@ namespace SuperBitV2_Digital {
         pins.setPull(pin, PinPullMode.PullUp);
         return pins.digitalReadPin(pin) == value;
     }
+    /** Check whether the motion sensor detects the selected movement state. */
 
     //% blockId=SuperBitV2_Digital_PIR block="PIR|pin %value_DNum|value %value"
     //% weight=96
@@ -629,6 +674,7 @@ namespace SuperBitV2_Digital {
 	pins.digitalWritePin(pin, 1);
         return pins.digitalReadPin(pin) == value;
     }
+    /** Check whether the collision sensor is in the selected state. */
 	
     //% blockId=SuperBitV2_Digital_Collision block="Collision|pin %value_DNum|value %value"
     //% weight=3
@@ -647,6 +693,7 @@ namespace SuperBitV2_Digital {
         pins.setPull(pin, PinPullMode.PullUp);
         return pins.digitalReadPin(pin) == value;
     }
+    /** Check whether the connected button is pressed or released. */
 
     //% blockId=SuperBitV2_Digital_Button block="Button|pin %value_DNum|value %value"
     //% weight=3
@@ -665,6 +712,7 @@ namespace SuperBitV2_Digital {
         pins.setPull(pin, PinPullMode.PullUp);
         return pins.digitalReadPin(pin) == value;
     }
+    /** Run the attached blocks when the vibration sensor is triggered. */
     //% blockId=SuperBitV2_Digital_Vibration block="Vibration|pin %value_DNum|get "
     //% weight=1
     //% blockGap=20
@@ -686,6 +734,7 @@ namespace SuperBitV2_Digital {
 
 }
 
+/** Read analog sensors connected to the SuperBit board. */
 //% color="#C814B8" weight=24 icon="\uf080"
 namespace SuperBitV2_Analog {
 
@@ -719,6 +768,7 @@ namespace SuperBitV2_Analog {
         //% blockId="P0P3" block="P0P3"
         AP0P3 = 2
     }	
+    /** Read the light sensor value. */
 
     //% blockId=SuperBitV2_Anaglog_Light block="Light|pin %value_ANum"
     //% weight=100
@@ -736,6 +786,7 @@ namespace SuperBitV2_Analog {
         return value;
         //return 0;
     }
+    /** Read the sound sensor value. */
 	
     //% blockId=SuperBitV2_Anaglog_Sound block="Sound|pin %value_ANum"
     //% weight=99
@@ -753,6 +804,7 @@ namespace SuperBitV2_Analog {
         return value;
         //return 0;
     }
+    /** Read the potentiometer knob value. */
 	//% blockId=SuperBitV2_Anaglog_Potentiometer block="Potentiometer|pin %value_ANum"
     //% weight=2
     //% blockGap=20
@@ -768,6 +820,7 @@ namespace SuperBitV2_Analog {
         value = pins.analogReadPin(pin);
         return value;
     }
+    /** Check whether the joystick points in the selected direction. */
 	
     //% blockId=SuperBitV2_Anaglog_Rocker block="Rocker|pin %value_ANum|value %value"
     //% weight=1
@@ -812,6 +865,7 @@ namespace SuperBitV2_Analog {
 
 }
 
+/** Control lights, vibration motors, and the buzzer using PWM pins. */
 //% color="#ECA40D" weight=22 icon="\uf085"
 namespace SuperBitV2_PWM {
 
@@ -848,6 +902,7 @@ namespace SuperBitV2_PWM {
         //% blockId="P5P11" block="P5P11"
         P5P11 = 6
     }	
+    /** Select the pin connected to the passive buzzer. */
 
     //% blockId=SuperBitV2_PWM_BuzzerPin block="Set Buzzer Pin|%value_DNum"
     //% weight=99
@@ -864,6 +919,7 @@ namespace SuperBitV2_PWM {
 		
 		pins.setAudioPin(pinb);
     }
+    /** Set the vibration motor strength from 0 to 1023. */
     //% blockId=SuperBitV2_PWM_VibrationMot block="Vibration Motor|%value_DNum|speed %speed"
     //% weight=80
     //% blockGap=22
@@ -881,6 +937,7 @@ namespace SuperBitV2_PWM {
 		
         pins.analogWritePin(pin, speed);
     }
+    /** Set the red, green, and blue brightness of the RGB light from 0 to 255. */
 	
     //% blockId=SuperBitV2_PWM_RGB block="RGB|(P12P13P14)|value1 %value1|value2 %value2|value3 %value3"
     //% weight=2
@@ -893,6 +950,7 @@ namespace SuperBitV2_PWM {
         pins.analogWritePin(AnalogPin.P14, value2 * 1024 / 256);
         pins.analogWritePin(AnalogPin.P12, value3 * 1024 / 256);
     }
+    /** Set the RGB light to the selected colour, or turn it off. */
 	
     //% blockId=SuperBitV2_PWM_RGB2 block="RGB|(P12P13P14)|value %value"
     //% weight=1

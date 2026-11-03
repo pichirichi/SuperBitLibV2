@@ -1,0 +1,16 @@
+{
+  "name": "superbit-v2-validation",
+  "private": true,
+  "scripts": {
+    "pxt:setup": "node -e \"require('fs').writeFileSync('node_modules/pxtcli.json', JSON.stringify({targetdir:'pxt-microbit'}))\"",
+    "build:sim": "pxt build --debug",
+    "test": "pxt gendocs --locs && node tests/localization.js && node tests/interfaces.js",
+    "test:render": "node tests/render.js"
+  },
+  "devDependencies": {
+    "pxt": "0.5.1",
+    "pxt-core": "13.2.17",
+    "pxt-microbit": "9.1.2",
+    "puppeteer": "23.11.1"
+  }
+}
