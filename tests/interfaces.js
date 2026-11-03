@@ -22,8 +22,23 @@ async function main() {
     assert.equal(blocks.success, true, JSON.stringify(blocks.diagnostics));
     const xml = blocks.outfiles['main.blocks'];
     assert.ok(xml && !xml.includes('typescript_statement'), 'Must generate native blocks, not grey code blocks');
+    if (fs.existsSync('examples/servos.ts')) {
+        for (const id of ['Servo180','CalibrateServo180','Servo360','Servo360Stop','CalibrateServo360']) {
+            assert.ok(xml.includes('type="SuperBitV2_' + id + '"'), `Missing native block: ${id}`);
+        }
+        const apis = pxtc.getApiInfo(result.ast, opts.jres);
+        const ports = Object.keys(apis.byQName).filter(k => /^SuperBitV2\.enServo\.S[1-8]$/.test(k));
+        assert.equal(ports.length, 8);
+        for (const name of ['Servo180','CalibrateServo180','Servo360','Servo360Stop','CalibrateServo360']) {
+            assert.equal(apis.byQName['SuperBitV2.' + name].parameters[0].type, 'SuperBitV2.enServo');
+        }
+    }
     const python = pxt.py.decompileToPython(result.ast, 'main.ts');
     assert.equal(python.success, true, JSON.stringify(python.diagnostics));
+    if (fs.existsSync('examples/servos.py')) {
+        assert.equal(fs.readFileSync('examples/servos.py', 'utf8').trim(), python.outfiles['main.py'].trim(),
+            'Checked-in Python example must match the actual PXT conversion');
+    }
     const pyOpts = { ...opts, target: { ...opts.target, preferredEditor: pxt.PYTHON_PROJECT_NAME },
         fileSystem: { ...opts.fileSystem, 'main.ts': '', 'main.py': python.outfiles['main.py'] },
         sourceFiles: [...opts.sourceFiles, 'main.py'] };

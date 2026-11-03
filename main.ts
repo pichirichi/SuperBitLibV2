@@ -283,6 +283,131 @@ namespace SuperBitV2 {
             case enMusic.power_down: music.beginMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.Once); break;
         }
     }
+    // Calibration belongs to a port and is reset when the micro:bit restarts.
+    // Conservative positional defaults: calibrate the physical endpoints before
+    // treating the logical 0..180 range as a measured 180-degree sweep.
+    let servo180MinUs = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
+    let servo180MaxUs = [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000];
+    // Match Servo4's nominal pulses, without changing the legacy API.
+    let servo360ForwardUs = [800, 800, 800, 800, 800, 800, 800, 800];
+    let servo360NeutralUs = [1700, 1700, 1700, 1700, 1700, 1700, 1700, 1700];
+    let servo360ReverseUs = [2600, 2600, 2600, 2600, 2600, 2600, 2600, 2600];
+
+    export enum ServoDirection {
+        //% block="forward"
+        Forward = 1,
+        //% block="reverse"
+        Reverse = 2
+    }
+
+    function validServoPort(port: number): boolean {
+        return port >= 0 && port <= 7 && port == Math.floor(port);
+    }
+
+    function clampServoInput(value: number, low: number, high: number, fallback: number): number {
+        // NaN has no ordering. Infinity is clamped by the comparisons below.
+        if (value != value) return fallback;
+        return Math.max(low, Math.min(high, value));
+    }
+
+    function validServoPulse(value: number): boolean {
+        // This electrical envelope is NOT a guarantee of mechanical safety.
+        // Values outside it, including NaN and Infinity, reject the calibration.
+        return value >= 500 && value <= 3100;
+    }
+
+    function writeServoPulse(port: enServo, pulseUs: number): void {
+        if (!validServoPort(port)) return;
+        // Existing setFreq(50) stores 121 (truncated from 121.0703125) in
+        // PRE_SCALE. At the nominal 25 MHz oscillator, one tick is 4.88 us,
+        // and one frame is 19988.48 us. Keep the shared frequency and legacy
+        // APIs unchanged; round the new APIs to the nearest actual PWM tick.
+        let ticks = Math.round(pulseUs * 25 / 122);
+        setPwm(port, 0, ticks);
+    }
+
+    /**
+     * Set a positional Servo to an angle from 0 to 180 degrees. Calibrate its safe physical endpoints first.
+     * @param port servo port, eg: SuperBitV2.enServo.S1
+     * @param angle angle in degrees; out-of-range values are clamped, eg: 90
+     */
+    //% blockId=SuperBitV2_Servo180 block="Servo 180°|Port %port|Angle %angle°"
+    //% weight=97 angle.min=0 angle.max=180 angle.defl=90
+    export function Servo180(port: enServo, angle: number): void {
+        if (!validServoPort(port)) return;
+        angle = clampServoInput(angle, 0, 180, 90);
+        writeServoPulse(port, servo180MinUs[port] +
+            (servo180MaxUs[port] - servo180MinUs[port]) * angle / 180);
+    }
+
+    /**
+     * Configure safe positional pulse endpoints for one port. Does not move the servo. Invalid calibration is ignored. Calibration resets on restart.
+     * @param port servo port
+     * @param minUs pulse for 0 degrees in microseconds (500 to 3100), eg: 1000
+     * @param maxUs pulse for 180 degrees; must exceed minUs (500 to 3100), eg: 2000
+     */
+    //% blockId=SuperBitV2_CalibrateServo180 block="calibrate Servo 180°|Port %port|0° pulse (µs) %minUs|180° pulse (µs) %maxUs"
+    //% advanced=true weight=80
+    //% minUs.min=500 minUs.max=3100 minUs.defl=1000 maxUs.min=500 maxUs.max=3100 maxUs.defl=2000
+    export function CalibrateServo180(port: enServo, minUs: number, maxUs: number): void {
+        if (!validServoPort(port) || !validServoPulse(minUs) ||
+            !validServoPulse(maxUs) || minUs >= maxUs) return;
+        servo180MinUs[port] = minUs;
+        servo180MaxUs[port] = maxUs;
+    }
+
+    /**
+     * Run a continuous-rotation Servo in a direction at 0 to 100 percent speed. Zero sends the calibrated stop pulse. Speed is a command percentage, not measured RPM.
+     * @param port servo port
+     * @param direction direction of rotation
+     * @param speed speed percentage; out-of-range values are clamped, eg: 50
+     */
+    //% blockId=SuperBitV2_Servo360 block="Servo 360°|Port %port|Direction %direction|Speed %speed percent"
+    //% weight=96 speed.min=0 speed.max=100 speed.defl=50
+    export function Servo360(port: enServo, direction: ServoDirection, speed: number): void {
+        if (!validServoPort(port)) return;
+        speed = clampServoInput(speed, 0, 100, 0);
+        let neutral = servo360NeutralUs[port];
+        let endpoint = neutral;
+        if (direction == ServoDirection.Forward) endpoint = servo360ForwardUs[port];
+        else if (direction == ServoDirection.Reverse) endpoint = servo360ReverseUs[port];
+        // An invalid direction also stops instead of leaving the motor running.
+        writeServoPulse(port, neutral + (endpoint - neutral) * speed / 100);
+    }
+
+    /**
+     * Stop a continuous-rotation Servo by sending its calibrated neutral pulse. Calibrate neutral if the servo creeps.
+     * @param port servo port
+     */
+    //% blockId=SuperBitV2_Servo360Stop block="stop Servo 360°|Port %port"
+    //% weight=95
+    export function Servo360Stop(port: enServo): void {
+        if (!validServoPort(port)) return;
+        writeServoPulse(port, servo360NeutralUs[port]);
+    }
+
+    /**
+     * Configure continuous-rotation pulse endpoints and neutral for one port, then send the new stop pulse. Invalid calibration is ignored. Calibration resets on restart.
+     * @param port servo port
+     * @param forwardUs full forward pulse in microseconds (500 to 3100), eg: 800
+     * @param neutralUs stop pulse, strictly between forwardUs and reverseUs, eg: 1700
+     * @param reverseUs full reverse pulse in microseconds (500 to 3100), eg: 2600
+     */
+    //% blockId=SuperBitV2_CalibrateServo360 block="calibrate Servo 360°|Port %port|forward pulse (µs) %forwardUs|stop pulse (µs) %neutralUs|reverse pulse (µs) %reverseUs"
+    //% advanced=true weight=79
+    //% forwardUs.min=500 forwardUs.max=3100 forwardUs.defl=800
+    //% neutralUs.min=500 neutralUs.max=3100 neutralUs.defl=1700
+    //% reverseUs.min=500 reverseUs.max=3100 reverseUs.defl=2600
+    export function CalibrateServo360(port: enServo, forwardUs: number, neutralUs: number, reverseUs: number): void {
+        if (!validServoPort(port) || !validServoPulse(forwardUs) ||
+            !validServoPulse(neutralUs) || !validServoPulse(reverseUs) ||
+            forwardUs >= neutralUs || neutralUs >= reverseUs) return;
+        servo360ForwardUs[port] = forwardUs;
+        servo360NeutralUs[port] = neutralUs;
+        servo360ReverseUs[port] = reverseUs;
+        Servo360Stop(port);
+    }
+
     /** Set a servo using the legacy 180-degree pulse mapping. Actual travel depends on the servo. */
     
     //% blockId=SuperBitV2_Servo block="Servo(180°)|num %num|value %value"
