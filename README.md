@@ -14,7 +14,7 @@ and saved block identifiers are preserved.
 
 The plain repository URL selects the latest published version. To pin this
 release in a project, set its `pxt.json` dependency to
-`github:pichirichi/SuperBitLibV2#v1.0.2`.
+`github:pichirichi/SuperBitLibV2#v1.0.3`.
 
 The fork uses `master` as its default branch. MakeCode pins the installed
 extension to a specific commit or release; existing projects do not automatically
