@@ -48,12 +48,13 @@ Reference: [NXP PCA9685 datasheet, PWM frequency and PRE_SCALE](https://www.nxp.
 ## New mappings
 
 `Servo180(port, angle)` clamps the angle to 0–180, then linearly maps it between
-that port's calibrated pulse endpoints. The default 1000–2000 µs interval is a
-conservative starting range. **It is not a claim of a physical 180° sweep on an
-uncalibrated servo.** The logical angle represents physical travel only after
-measuring and calibrating the actual endpoints. A servo that cannot safely
-travel a full 180° must be used with its measured, narrower travel; do not force
-it to reach the label's endpoint.
+that port's calibrated pulse endpoints. The default is 600–3000 µs: 0°, 90°,
+and 180° request 600, 1800, and 3000 µs respectively. These values are based
+on the tested kit servo, where legacy `Servo2` inputs 0, 180, and 360 produced
+approximately 0°, 90°, and 180°. They are not universal SG90 specifications;
+actual travel varies between servos. Calibrate safe endpoints for other models
+or individual motors, and do not force a servo past a mechanical limit. PWM
+quantization and oscillator variation also affect the actual pulse.
 
 `Servo360(port, direction, speed)` clamps speed to 0–100 percent and interpolates
 from calibrated neutral toward the selected full-speed pulse. Defaults are
@@ -83,12 +84,14 @@ linkage and use the kit's recommended servo power supply and a common ground.
 A servo can still hit an internal stop without a linkage. Stop and reduce travel
 if it buzzes, stalls, or presses against a mechanical limit.
 
-1. Start with `CalibrateServo180(S1, 1000, 2000)` and `Servo180(S1, 90)`.
+1. The tested kit servo uses the default 600–3000 µs range, so
+   `Servo180(S1, 90)` needs no calibration block. For an unfamiliar servo,
+   start with a narrower range such as `CalibrateServo180(S1, 1000, 2000)`
+   and `Servo180(S1, 90)`.
 2. Measure the current travel. Approach each end slowly, adjusting its pulse
    by small steps (for example 10–20 µs) and testing the corresponding angle.
-3. Back away from any mechanical stop. Do not automatically set 3040 µs because
-   another motor reached 180° there; it is only the pulse inferred from the
-   supplied observation. The allowed maximum of 3100 µs is not a target.
+3. Back away from any mechanical stop. The 3000 µs default was measured on
+   one kit servo; it and the allowed maximum of 3100 µs may be unsafe for others.
 4. Save the measured safe endpoints in `CalibrateServo180` at program startup.
    That block updates configuration without moving the servo; the next
    `Servo180` call uses it. Verify the physical angles with a protractor.
@@ -126,8 +129,9 @@ TypeScript API metadata; there is no separate Python implementation.
 למנוע Servo שמגיע לזווית מסוימת השתמשו בבלוק **Servo 180°**. למנוע שמסתובב
 ברציפות השתמשו ב־**Servo 360°** ובבלוק העצירה שלו. מהירות 0 עוצרת גם היא.
 
-לפני שימוש בזוויות הקצה, בקשו מהמורה לכייל את המנוע. ערכי ברירת המחדל אינם
-מבטיחים תנועה של 180 מעלות בכל מנוע. אם המנוע רועד, מזמזם או נתקע, הפסיקו
+ברירת המחדל, 600–3000 מיקרו־שניות, מבוססת על המנוע שנבדק בערכה ואינה
+מפרט אוניברסלי של SG90. לפני שימוש בזוויות הקצה במנוע אחר, בקשו מהמורה
+לבדוק ולכייל את המנוע. הערכים אינם מבטיחים תנועה של 180 מעלות בכל מנוע. אם המנוע רועד, מזמזם או נתקע, הפסיקו
 את הניסוי וצמצמו את טווח התנועה. במנוע בסיבוב רציף, אם יש תנועה איטית בזמן
 עצירה, צריך לכייל את משך אות העצירה. שמרו את בלוקי הכיול בתחילת התוכנית:
 הכיול מתאפס בכל הפעלה מחדש.
