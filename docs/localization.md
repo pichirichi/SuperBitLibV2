@@ -54,3 +54,19 @@ SuperBitV2 also supplies Hebrew keys for its unchanged NeoPixel dependency.
 See [NeoPixel coverage and validation](neopixel-localization.md).
 `tests/neopixel-localization.js` extracts that dependency’s current keys and
 checks that a consuming project receives the translations through SuperBitV2.
+
+## Category names across language switches
+
+MakeCode caches localized API metadata. PXT's `{id:category}` localization
+path can save a translated namespace name without retaining its English name,
+so switching to English may keep Hebrew categories. The source declares an
+explicit English `block` label for each namespace, and Hebrew uses the
+namespace's `|block` key instead of a `{id:category}` key. This causes PXT to
+retain `_untranslatedBlock` when localizing and restore English in its cache.
+Do not reintroduce the Hebrew category-ID aliases: they bypass that mechanism.
+
+`neopixel-localization.ts` adds only an empty namespace declaration with its
+English block label; it emits no JavaScript and leaves NeoPixel behavior intact.
+`tests/category-switch.js` checks two Hebrew → English cycles using the web
+editor's metadata-cache restoration behavior for all five categories. Hosted
+language-switch verification is still required after the fix is published.
